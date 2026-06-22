@@ -7,6 +7,8 @@ An agentic RAG system that answers questions about financial risk data using two
 
 The agent (ReAct / LangGraph) decides which tool to use based on the question. Answers in French or English.
 
+![Demo](assets/demo.gif)
+
 ## Stack
 
 Python · LangChain · LangGraph · ChromaDB · Groq (Llama 3.3 70B) · Streamlit · sentence-transformers
@@ -29,7 +31,7 @@ Get a free key at [console.groq.com](https://console.groq.com).
 
 ```bash
 # Index documents (run once)
-python -m src.ingest
+python ingest.py
 
 # Launch the dashboard
 streamlit run app.py
