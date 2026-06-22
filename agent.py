@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langgraph.prebuilt import create_react_agent
-from src.tools import rag_tool, sql_tool
+from tools import rag_tool, sql_tool
 
 load_dotenv()
 

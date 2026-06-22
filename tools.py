@@ -1,14 +1,9 @@
 import sqlite3
-from pathlib import Path
-
 import pandas as pd
 from langchain.tools import tool
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import Chroma
-
-ROOT = Path(__file__).resolve().parents[1]
-CHROMA_DIR = str(ROOT / "outputs" / "chroma")
-DB_PATH = ROOT.parent / "spf-risk-scoring" / "outputs" / "risk.sqlite"
+from config import CHROMA_DIR, DB_PATH, EMBED_MODEL
 
 _vs = None
 
@@ -16,8 +11,7 @@ _vs = None
 def get_vs():
     global _vs
     if _vs is None:
-        emb = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-        _vs = Chroma(persist_directory=CHROMA_DIR, embedding_function=emb)
+        _vs = Chroma(persist_directory=CHROMA_DIR, embedding_function=SentenceTransformerEmbeddings(model_name=EMBED_MODEL))
     return _vs
 
 
@@ -28,9 +22,7 @@ def rag_tool(query: str) -> str:
     results = get_vs().similarity_search(query, k=4)
     if not results:
         return "No relevant document found."
-    return "\n\n---\n\n".join(
-        f"[{r.metadata.get('source', 'doc')}]\n{r.page_content}" for r in results
-    )
+    return "\n\n---\n\n".join(f"[{r.metadata.get('source', 'doc')}]\n{r.page_content}" for r in results)
 
 
 @tool

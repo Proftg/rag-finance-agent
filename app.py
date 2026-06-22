@@ -1,5 +1,5 @@
 import streamlit as st
-from src.agent import build_agent
+from agent import build_agent
 
 st.set_page_config(page_title="Financial RAG Agent", page_icon="🤖", layout="centered")
 st.title("Financial RAG Agent")

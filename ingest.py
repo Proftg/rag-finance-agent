@@ -1,13 +1,8 @@
-from pathlib import Path
-from langchain_community.document_loaders import TextLoader
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import TextLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import SentenceTransformerEmbeddings
-
-ROOT = Path(__file__).resolve().parents[1]
-DOCS_DIR = ROOT / "data" / "docs"
-CHROMA_DIR = str(ROOT / "outputs" / "chroma")
+from config import DOCS_DIR, CHROMA_DIR, EMBED_MODEL
 
 
 def run():
@@ -19,8 +14,7 @@ def run():
             docs.extend(PyPDFLoader(str(path)).load())
 
     chunks = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100).split_documents(docs)
-    embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    Chroma.from_documents(chunks, embeddings, persist_directory=CHROMA_DIR)
+    Chroma.from_documents(chunks, SentenceTransformerEmbeddings(model_name=EMBED_MODEL), persist_directory=CHROMA_DIR)
     print(f"Indexed {len(chunks)} chunks from {len(docs)} documents")
 
 
