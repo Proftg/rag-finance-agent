@@ -65,4 +65,4 @@ for f in Path("assets").glob("frame_*.png"):
 
 durations = [2000] + [900] * (len(frames) - 2) + [4000]
 frames[0].save(OUT, save_all=True, append_images=frames[1:], duration=durations, loop=0, optimize=True)
-print(f"GIF: {OUT} — {OUT.stat().st_size // 1024} KB, {len(frames)} frames")
+print(f"GIF: {OUT} | {OUT.stat().st_size // 1024} KB | {len(frames)} frames")

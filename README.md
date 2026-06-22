@@ -2,8 +2,8 @@
 
 An agentic RAG system that answers questions about financial risk data using two tools:
 
-- **Document search (RAG)** — semantic search over indexed reports and methodology docs (ChromaDB + sentence-transformers)
-- **SQL queries** — direct queries on a SQLite database of 30,000 scored clients
+- **Document search (RAG)**: semantic search over indexed reports and methodology docs (ChromaDB + sentence-transformers)
+- **SQL queries**: direct queries on a SQLite database of 30,000 scored clients
 
 The agent (ReAct / LangGraph) decides which tool to use based on the question. Answers in French or English.
 
