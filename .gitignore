@@ -8,3 +8,6 @@ data/docs/*.pdf
 .DS_Store
 .idea/
 .vscode/
+.ipynb_checkpoints/
+graphify-out/
+data/risk.sqlite
