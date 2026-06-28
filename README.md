@@ -7,11 +7,27 @@ An agentic RAG system that answers questions about financial risk data using two
 
 The agent (ReAct / LangGraph) decides which tool to use based on the question. Answers in French or English.
 
+Documents are structured with [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog) (Google's Open Knowledge Format), and the agent feeds a **governed wiki**: every answer is staged as a new OKF note, but it only re-enters the trusted corpus after explicit human approval.
+
 ![Demo](assets/demo.gif)
+
+## Knowledge governance: OKF + governed wiki
+
+The project is built around the lifecycle of knowledge, not just the model:
+
+```
+curated OKF docs ──rag_tool──> agent answers ──stage──> generated OKF note (unreviewed)
+       ▲                                                          │
+       └──────────────── promote() [human gate] ─────────────────┘
+```
+
+- **OKF (how knowledge enters)**: each doc carries a YAML front-matter (`type`, `title`, `tags`, `timestamp`, ...). At ingestion the YAML is parsed, stripped from the embedded text, and pushed as ChromaDB metadata, so citations show `title (type) [tags]` instead of a raw path.
+- **RAG (how knowledge is retrieved)**: factual grounding, traceability, citations.
+- **Governed wiki (how knowledge grows)**: answers are staged as OKF notes (`status: unreviewed`) in a **separate** ChromaDB collection, deduplicated on write (cosine >= 0.9). The agent never reads generated notes. A note enters the trusted corpus only when a human clicks **Promote** in the sidebar. This human gate makes self-poisoning impossible by construction.
 
 ## Stack
 
-Python · LangChain · LangGraph · ChromaDB · Groq (Llama 3.3 70B) · Streamlit · sentence-transformers
+Python · LangChain · LangGraph · ChromaDB · Groq (Llama 3.3 70B) · Streamlit · sentence-transformers · OKF
 
 ## Setup
 
