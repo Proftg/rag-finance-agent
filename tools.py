@@ -22,7 +22,17 @@ def rag_tool(query: str) -> str:
     results = get_vs().similarity_search(query, k=4)
     if not results:
         return "No relevant document found."
-    return "\n\n---\n\n".join(f"[{r.metadata.get('source', 'doc')}]\n{r.page_content}" for r in results)
+    return "\n\n---\n\n".join(f"[{_cite(r.metadata)}]\n{r.page_content}" for r in results)
+
+
+def _cite(meta: dict) -> str:
+    """Build an OKF-aware citation: title (type) [tags] falling back to source."""
+    label = meta.get("title") or meta.get("source", "doc")
+    if meta.get("type"):
+        label += f" ({meta['type']})"
+    if meta.get("tags"):
+        label += f" [tags: {meta['tags']}]"
+    return label
 
 
 @tool

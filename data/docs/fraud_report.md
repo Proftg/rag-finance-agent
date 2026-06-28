@@ -1,3 +1,12 @@
+---
+type: Report
+title: Fraud anomaly-detection report
+description: Anomaly-detection results on 284k card transactions, with lift and AUC against the fraud label.
+tags: [fraud, anomaly-detection, isolation-forest, auc, lift]
+timestamp: 2026-06-22T00:00:00Z
+domain: finance
+---
+
 # Fraud anomaly-detection report
 
 - Transactions: 284,807

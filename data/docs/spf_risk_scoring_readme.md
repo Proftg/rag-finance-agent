@@ -1,3 +1,12 @@
+---
+type: Playbook
+title: SPF Risk Scoring pipeline
+description: End-to-end risk-scoring methodology, from multi-source ingestion to unsupervised anomaly detection and dashboard.
+tags: [risk-scoring, methodology, isolation-forest, sql, pipeline]
+timestamp: 2026-06-22T00:00:00Z
+domain: finance
+---
+
 # SPF Risk Scoring: anomaly detection & risk scoring
 
 End-to-end data pipeline reproducing the workflow of a *data analyst* in a tax

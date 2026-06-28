@@ -1,3 +1,12 @@
+---
+type: Report
+title: Data quality report
+description: Business-rule checks and full column profile for the 30k-client risk database.
+tags: [data-quality, profiling, referential-integrity, sqlite]
+timestamp: 2026-06-22T00:00:00Z
+domain: finance
+---
+
 # Data quality report
 
 Run against the relational database `outputs/risk.sqlite`.
