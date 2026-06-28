@@ -4,6 +4,8 @@ __pycache__/
 .venv/
 venv/
 outputs/chroma/
+outputs/chroma_wiki/
+data/wiki/
 data/docs/*.pdf
 .DS_Store
 .idea/

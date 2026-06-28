@@ -1,4 +1,5 @@
 import streamlit as st
+import wiki
 from agent import build_agent
 
 st.set_page_config(page_title="Financial RAG Agent", page_icon="🤖", layout="centered")
@@ -40,6 +41,19 @@ if pending:
         except Exception as e:
             answer = f"Error: {e}"
     st.session_state["history"].append({"role": "assistant", "content": answer})
+    if not answer.startswith("Error:"):
+        wiki.maybe_save(pending, answer)
+
+with st.sidebar:
+    st.subheader("Generated wiki")
+    st.caption("OKF fiches staged from answers. Promote to add to the trusted corpus.")
+    fiches = wiki.list_fiches()
+    if not fiches:
+        st.caption("None staged yet.")
+    for slug, title in fiches:
+        if st.button(f"Promote: {title}", key=f"pr_{slug}", use_container_width=True):
+            wiki.promote(slug)
+            st.rerun()
 
 if st.session_state["history"]:
     st.divider()
