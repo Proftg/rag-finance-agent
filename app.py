@@ -1,7 +1,7 @@
 import streamlit as st
 import wiki
 from agent import build_agent
-from trace import ask
+from calllog import ask
 
 st.set_page_config(page_title="Financial RAG Agent", layout="centered")
 st.title("Financial RAG Agent")

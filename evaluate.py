@@ -2,7 +2,7 @@
 import sqlite3
 from agent import build_agent
 from config import DB_PATH
-from trace import ask
+from calllog import ask
 
 with sqlite3.connect(DB_PATH) as con:
     defaults = con.execute("select sum(default_flag) from scored_clients").fetchone()[0]
