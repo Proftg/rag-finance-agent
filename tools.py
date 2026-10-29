@@ -42,7 +42,8 @@ def _cite(meta: dict) -> str:
 def sql_tool(query: str) -> str:
     """Run a read-only SQL query on the scored_clients table (columns: ID, risk_score,
     anomaly, default_flag, limit_bal_eur, education_label, marriage_label, age_band,
-    risk_decile). Use for statistics, counts, averages, or specific client lookups."""
+    risk_decile). Credit clients only: no fraud or transaction data. Use for statistics,
+    counts, averages, or specific client lookups."""
     if not DB_PATH.exists():
         return "Database not found."
     try:

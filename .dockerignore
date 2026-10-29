@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+outputs/
+graphify-out/
+assets/
+data/wiki/
+data/risk.sqlite

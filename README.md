@@ -51,6 +51,28 @@ python ingest.py
 streamlit run app.py
 ```
 
+## Docker
+
+```bash
+docker build -t rag-finance-agent .
+docker run -p 8501:8501 -e GROQ_API_KEY=your_key \
+  -v "$PWD/data/risk.sqlite:/app/data/risk.sqlite:ro" rag-finance-agent
+```
+
+The image indexes the documents at build time and weighs about 3 GB (CPU torch). The SQLite file is not in the repository, so it is mounted at run time.
+
+## Call log
+
+Every question is appended to `outputs/calls.jsonl`: tools called, seconds and tokens used. It shows which tool answered and what each question costs.
+
+## Evaluation
+
+```bash
+python evaluate.py
+```
+
+Seven questions with known answers. A case passes when the agent picked the right tool and the answer contains the expected figure. Last run: 7/7. The first run scored 6/7: a fraud question went to the SQL tool, which only holds credit clients. I fixed the tool description rather than the test.
+
 ## Example questions
 
 - *What is the AUC score for fraud detection?* → RAG on reports

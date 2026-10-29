@@ -1,6 +1,7 @@
 import streamlit as st
 import wiki
 from agent import build_agent
+from trace import ask
 
 st.set_page_config(page_title="Financial RAG Agent", layout="centered")
 st.title("Financial RAG Agent")
@@ -36,7 +37,7 @@ if pending:
     st.session_state["history"].append({"role": "user", "content": pending})
     with st.spinner("Thinking..."):
         try:
-            res = st.session_state["agent"].invoke({"messages": [("human", pending)]})
+            res = ask(st.session_state["agent"], pending)
             answer = res["messages"][-1].content
         except Exception as e:
             answer = f"Error: {e}"
