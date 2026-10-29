@@ -1,34 +1,21 @@
-"""Governed LLM wiki: stage agent answers as OKF fiches in a separate Chroma
-collection. Generated knowledge is never read by the agent until a human promotes
-it into the trusted corpus (data/docs). That promotion is the governance gate."""
+"""Governed LLM wiki: agent answers are staged as OKF fiches in a separate Chroma
+collection. The agent does not read them until a human promotes one into data/docs."""
 import re
 import sys
 import hashlib
+from functools import cache
 from datetime import datetime, timezone
 
 import yaml
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import SentenceTransformerEmbeddings
-from config import DOCS_DIR, WIKI_DIR, WIKI_CHROMA_DIR, EMBED_MODEL
+from config import DOCS_DIR, WIKI_DIR, WIKI_CHROMA_DIR
 from ingest import parse_okf
+from tools import embeddings, get_vs
 
-_emb = None
-_wvs = None
-
-
-def _embeddings():
-    global _emb
-    if _emb is None:
-        _emb = SentenceTransformerEmbeddings(model_name=EMBED_MODEL)
-    return _emb
-
-
+@cache
 def _wiki_vs():
-    global _wvs
-    if _wvs is None:
-        _wvs = Chroma(persist_directory=WIKI_CHROMA_DIR, embedding_function=_embeddings(),
-                      collection_metadata={"hnsw:space": "cosine"})
-    return _wvs
+    return Chroma(persist_directory=WIKI_CHROMA_DIR, embedding_function=embeddings(),
+                  collection_metadata={"hnsw:space": "cosine"})
 
 
 def _slug(text):
@@ -84,7 +71,6 @@ def promote(slug):
     dest.write_text(text, encoding="utf-8")
     src.unlink()
     _wiki_vs().delete(ids=[slug])
-    from tools import get_vs  # lazy import breaks the tools<->wiki cycle
     body, meta = parse_okf(text, dest.name)
     get_vs().add_texts([body], metadatas=[meta], ids=[slug])
     return dest

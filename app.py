@@ -2,9 +2,9 @@ import streamlit as st
 import wiki
 from agent import build_agent
 
-st.set_page_config(page_title="Financial RAG Agent", page_icon="🤖", layout="centered")
+st.set_page_config(page_title="Financial RAG Agent", layout="centered")
 st.title("Financial RAG Agent")
-st.caption("ReAct agent · document search + SQL queries · Groq / Llama 3.3 70B")
+st.caption("ReAct agent · document search + SQL queries · Groq / GPT-OSS 120B")
 
 if "agent" not in st.session_state:
     with st.spinner("Loading..."):

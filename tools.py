@@ -1,18 +1,21 @@
 import sqlite3
+from functools import cache
+
 import pandas as pd
 from langchain.tools import tool
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import Chroma
 from config import CHROMA_DIR, DB_PATH, EMBED_MODEL
 
-_vs = None
+
+@cache
+def embeddings():
+    return SentenceTransformerEmbeddings(model_name=EMBED_MODEL)
 
 
+@cache
 def get_vs():
-    global _vs
-    if _vs is None:
-        _vs = Chroma(persist_directory=CHROMA_DIR, embedding_function=SentenceTransformerEmbeddings(model_name=EMBED_MODEL))
-    return _vs
+    return Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings())
 
 
 @tool
@@ -42,10 +45,8 @@ def sql_tool(query: str) -> str:
     risk_decile). Use for statistics, counts, averages, or specific client lookups."""
     if not DB_PATH.exists():
         return "Database not found."
-    if any(w in query.lower() for w in ["drop", "delete", "insert", "update", "alter", "create"]):
-        return "Only SELECT queries are allowed."
     try:
-        with sqlite3.connect(DB_PATH) as con:
+        with sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True) as con:  # read-only: writes fail at the DB level
             df = pd.read_sql(query, con)
         return "No results." if df.empty else df.to_string(index=False, max_rows=20)
     except Exception as e:

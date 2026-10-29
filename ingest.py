@@ -5,8 +5,8 @@ from langchain_core.documents import Document
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import SentenceTransformerEmbeddings
-from config import DOCS_DIR, CHROMA_DIR, EMBED_MODEL
+from config import DOCS_DIR, CHROMA_DIR
+from tools import embeddings
 
 
 def parse_okf(text, source):
@@ -40,7 +40,7 @@ def run():
 
     chunks = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100).split_documents(docs)
     shutil.rmtree(CHROMA_DIR, ignore_errors=True)  # idempotent rebuild, no stale/duplicate chunks
-    Chroma.from_documents(chunks, SentenceTransformerEmbeddings(model_name=EMBED_MODEL), persist_directory=CHROMA_DIR)
+    Chroma.from_documents(chunks, embeddings(), persist_directory=CHROMA_DIR)
     print(f"Indexed {len(chunks)} chunks from {len(docs)} documents")
 
 

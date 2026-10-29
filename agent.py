@@ -15,5 +15,5 @@ PROMPT = (
 
 
 def build_agent():
-    llm = ChatGroq(model="llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY"), temperature=0)
+    llm = ChatGroq(model="openai/gpt-oss-120b", api_key=os.getenv("GROQ_API_KEY"), temperature=0)
     return create_react_agent(llm, [rag_tool, sql_tool], prompt=PROMPT)
